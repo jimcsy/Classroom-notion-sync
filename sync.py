@@ -5,8 +5,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # Load Notion config
-NOTION_TOKEN = os.environ["ntn_J1485670679aONpoTVR7lTLph7OLFFQ4Xq1jmd8P3eP1E3"]
-NOTION_DATABASE_ID = os.environ["25d0588d8917806f8730e5aead6ceda8"]
+NOTION_TOKEN = os.environ["NOTION_TOKEN"]
+NOTION_DATABASE_ID = os.environ["NOTION_DATABASE_ID"]
 
 # Load Google Classroom credentials
 google_creds = json.loads(os.environ["GOOGLE_CREDENTIALS"])
@@ -57,5 +57,6 @@ def push_to_notion(tasks):
 if __name__ == "__main__":
     assignments = get_assignments()
     push_to_notion(assignments)
+
 
 
