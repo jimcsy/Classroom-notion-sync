@@ -3,7 +3,7 @@ name: Classroom to Notion Sync
 on:
   schedule:
     - cron: "0 */6 * * *"   # Runs every 6 hours
-  workflow_dispatch:        # Manual trigger
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -21,9 +21,11 @@ jobs:
       - name: Install dependencies
         run: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
 
+      - name: Write service account file
+        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > service_account.json
+
       - name: Run sync script
         env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         run: python sync.py
