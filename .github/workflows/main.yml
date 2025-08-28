@@ -25,5 +25,5 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${"web":{"client_id":"587434812346-0d543mh8457tkeodts05c350c6hfds63.apps.googleusercontent.com","project_id":"classroom-470403","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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"}}
           NOTION_TOKEN: $ntn_J1485670679aONpoTVR7lTLph7OLFFQ4Xq1jmd8P3eP1E3
-          NOTION_DATABASE_ID: $25d0588d8917806f8730e5aead6ceda8?v=25d0588d89178072afb0000c0b4ab7c8
+          NOTION_DATABASE_ID: $25d0588d8917806f8730e5aead6ceda8
         run: python sync.py
