@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 
 # Load Notion config
 NOTION_TOKEN = os.environ["ntn_J1485670679aONpoTVR7lTLph7OLFFQ4Xq1jmd8P3eP1E3"]
-NOTION_DATABASE_ID = os.environ["1880588d891780bdb126f11aefaed057"]
+NOTION_DATABASE_ID = os.environ["25d0588d8917806f8730e5aead6ceda8?v=25d0588d89178072afb0000c0b4ab7c8"]
 
 # Load Google Classroom credentials
 google_creds = json.loads(os.environ["GOOGLE_CREDENTIALS"])
@@ -57,3 +57,4 @@ def push_to_notion(tasks):
 if __name__ == "__main__":
     assignments = get_assignments()
     push_to_notion(assignments)
+
