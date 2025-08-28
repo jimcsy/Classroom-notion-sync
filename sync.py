@@ -9,11 +9,24 @@ NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 NOTION_DATABASE_ID = os.environ["NOTION_DATABASE_ID"]
 
 # Load Google Classroom credentials
-google_creds = json.loads(os.environ["GOOGLE_CREDENTIALS"])
-SCOPES = ["https://www.googleapis.com/auth/classroom.coursework.me.readonly"]
-creds = service_account.Credentials.from_service_account_info(google_creds, scopes=SCOPES)
+with open("service_account.json") as f:
+    google_creds = json.load(f)
 
+SCOPES = [
+    "https://www.googleapis.com/auth/classroom.courses.readonly",
+    "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+    "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+]
+
+creds = service_account.Credentials.from_service_account_info(google_creds, scopes=SCOPES)
 service = build("classroom", "v1", credentials=creds)
+
+# --- Format due date ---
+def format_due_date(due):
+    if not due:
+        return None
+    year, month, day = due["year"], due["month"], due["day"]
+    return f"{year:04d}-{month:02d}-{day:02d}"
 
 # --- Fetch assignments ---
 def get_assignments():
@@ -36,7 +49,7 @@ def get_assignments():
 
 # --- Push to Notion ---
 def push_to_notion(tasks):
-    url = f"https://api.notion.com/v1/pages"
+    url = "https://api.notion.com/v1/pages"
     headers = {
         "Authorization": f"Bearer {NOTION_TOKEN}",
         "Notion-Version": "2022-06-28",
@@ -49,14 +62,15 @@ def push_to_notion(tasks):
             "properties": {
                 "Name": {"title": [{"text": {"content": task["title"]}}]},
                 "Course": {"rich_text": [{"text": {"content": task["course"]}}]},
-                "Due Date": {"date": {"start": str(task["due"]) if task["due"] else None}}
             }
         }
-        requests.post(url, headers=headers, json=data)
+        if task["due"]:
+            data["properties"]["Due Date"] = {"date": {"start": format_due_date(task["due"])}}
+
+        res = requests.post(url, headers=headers, json=data)
+        if not res.ok:
+            print("❌ Failed to insert:", res.text)
 
 if __name__ == "__main__":
     assignments = get_assignments()
     push_to_notion(assignments)
-
-
-
